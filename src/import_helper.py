@@ -35,6 +35,14 @@ class SparkImportHelper(object):
         self.tmpdir = None
         LOGGER.setLevel(loglevel)
 
+        LOGGER.info("Creating a tempdir")
+        self.tmpdir = tempfile.mkdtemp()
+
+    def __del__(self):
+        LOGGER.info("Removing the tempdir: %s", self.tmpdir)
+        shutil.rmtree(self.tmpdir)
+
+
     def __find_files(self, basedir, exts, recursive=True):
         """Find all files having one of given file extensions in a given
         basedir. If recursive is True, it also searches in sub-directories.
@@ -122,8 +130,6 @@ class SparkImportHelper(object):
         #     To make it work, we create a zip file for each top-level
         #   sub-module (e.g. module1.zip for myprogram/module1) and
         #   add it to Spark's distributed cache.
-        LOGGER.info("Creating a tempdir")
-        self.tmpdir = tempfile.mkdtemp()
 
         # absolute paths of top-level sub-directories
         subdirs = []
@@ -137,8 +143,6 @@ class SparkImportHelper(object):
             filepath = self.__get_sub_module(basedir, subdir, exts)
             self.__add_module(filepath)
 
-        LOGGER.info("Removing the tempdir: %s", self.tmpdir)
-        shutil.rmtree(self.tmpdir)
 
 
 if __name__ == "__main__":
