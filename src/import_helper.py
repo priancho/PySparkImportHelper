@@ -30,9 +30,10 @@ class SparkImportHelper(object):
         myhelper.add_deps("/path/to/some/custom/lib")
     """
 
-    def __init__(self, spark):
+    def __init__(self, spark, loglevel="INFO"):
         self.spark = spark
         self.tmpdir = None
+        LOGGER.setLevel(loglevel)
 
     def __find_files(self, basedir, exts, recursive=True):
         """Find all files having one of given file extensions in a given
